@@ -1,11 +1,10 @@
 package commands;
 
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import core.Main;
 import stuff.SECRETS;
 
-public class helpcommand implements Command{
-
+public class CommandHelp implements Command{
 
     @Override
     public boolean called(String[] args, MessageReceivedEvent event) {

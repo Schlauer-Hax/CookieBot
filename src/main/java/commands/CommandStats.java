@@ -1,8 +1,8 @@
 package commands;
 
 import core.Main;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,7 +11,8 @@ import java.sql.ResultSet;
 
 import static core.Main.*;
 
-public class stats implements Command {
+public class CommandStats implements Command {
+
     @Override
     public boolean called(String[] args, MessageReceivedEvent event) {
         return false;
@@ -21,16 +22,16 @@ public class stats implements Command {
     public void action(String[] args, MessageReceivedEvent event) {
         try {
             Connection con = DriverManager.getConnection(url + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", user, password);
-            PreparedStatement pst = con.prepareStatement("SELECT * FROM `user` WHERE `ID` LIKE '"+event.getAuthor().getId()+"'");
+            PreparedStatement pst = con.prepareStatement("SELECT * FROM `user` WHERE `ID` LIKE '" + event.getAuthor().getId() + "'");
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 TempCookies = rs.getInt(2);
                 TempClick = rs.getInt(3);
             } else {
-                event.getTextChannel().sendMessage((Message) Embed.setDescription("Du musst zuerst eine Nachricht schreiben!").setTitle("Fehler").build()).queue();
+                event.getTextChannel().sendMessage((Message) Embed.setDescription("Du musst als erstes eine Nachricht schreiben!").setTitle("Fehler").build()).queue();
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
 
         event.getTextChannel().sendMessage(

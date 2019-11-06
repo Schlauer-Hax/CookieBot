@@ -1,10 +1,11 @@
 package commands;
 
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import static core.Main.Embed;
 
-public class botinfo implements Command {
+public class CommandBotInfo implements Command {
+
     @Override
     public boolean called(String[] args, MessageReceivedEvent event) {
         return false;

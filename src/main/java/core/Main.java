@@ -1,17 +1,14 @@
 package core;
 
 import commands.*;
-import listeners.MessageRecieve;
-import listeners.commandListener;
-import listeners.readyListener;
-import net.dv8tion.jda.core.*;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import listeners.MessageListener;
+import listeners.CommandListener;
+import listeners.ReadyListener;
+import net.dv8tion.jda.api.*;
+import net.dv8tion.jda.api.entities.Activity;
 import stuff.SECRETS;
 
-import javax.security.auth.login.LoginException;
 import java.awt.*;
-import java.sql.*;
 
 public class Main {
 
@@ -20,8 +17,6 @@ public class Main {
     public static String user = "root";
     public static String password = "root";
 
-    //Click
-    public static JDABuilder builder;
     public static int TempCookies;
     public static int TempClick;
     //Shop
@@ -39,28 +34,23 @@ public class Main {
             .setFooter("© Cookiebot v." + SECRETS.VERSION, "http://www.baggerstation.de/testseite/CookieBot/cookie.png");
 
     public static void main(String[] Args) {
-        builder = new JDABuilder(AccountType.BOT);
+        //Click
+        JDABuilder builder = new JDABuilder(AccountType.BOT);
         builder.setToken(SECRETS.TOKEN);
         builder.setAutoReconnect(true);
         builder.setStatus(OnlineStatus.ONLINE);
-        builder.setGame(Game.of(Game.GameType.DEFAULT, SECRETS.GAME));
+        builder.setActivity(Activity.playing(SECRETS.GAME));
 
-        builder.addEventListener(new MessageRecieve());
-        builder.addEventListener(new commandListener());
-        builder.addEventListener(new readyListener());
+        builder.addEventListeners(new MessageListener(), new CommandListener(), new ReadyListener());
 
-        commandHandler.commands.put("help", new helpcommand());
-        commandHandler.commands.put("shop", new shop());
-        commandHandler.commands.put("stats", new stats());
-        commandHandler.commands.put("bank", new bank());
-        commandHandler.commands.put("botinfo", new botinfo());
+        CommandHandler.commands.put("help", new CommandHelp());
+        CommandHandler.commands.put("shop", new CommandShop());
+        CommandHandler.commands.put("stats", new CommandStats());
+        CommandHandler.commands.put("bank", new CommandBank());
+        CommandHandler.commands.put("botinfo", new CommandBotInfo());
 
         try {
-            JDA jda = builder.buildBlocking();
-        } catch (LoginException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            JDA jda = builder.build();
         } catch (Exception e) {
             e.printStackTrace();
         }
